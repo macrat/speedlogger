@@ -1,0 +1,117 @@
+<head>
+	<title>speedlogger</title>
+
+	<link rel=stylesheet href="https://unpkg.com/metrics-graphics/dist/metricsgraphics.css">
+	<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+	<script src="https://unpkg.com/d3"></script>
+	<script src="https://unpkg.com/metrics-graphics/dist/metricsgraphics.min.js"></script>
+	<style>
+body {
+	margin: 0;
+}
+	</style>
+</head>
+
+<body>
+	<div id=alldownload></div>
+	<div id=allupload></div>
+	<div id=daydownload></div>
+	<div id=dayupload></div>
+
+	<script>
+let data = [];
+
+
+function rendering() {
+	MG.data_graphic({
+		target: '#alldownload',
+		width: window.innerWidth,
+		height: window.innerHeight / 4,
+		left: 80,
+		right: 40,
+		data: data,
+		interpolate: d3.curveLinear,
+		linked: true,
+		linked_format: '%Y-%m-%d-%H-%M',
+		x_accessor: 'datetime',
+		y_accessor: 'download',
+		y_extended_ticks: true,
+		y_label: 'download speed [Mbps]',
+		x_mouseover: '%Y/%m/%d %H:%M  ',
+		color: 'darkblue',
+	});
+	MG.data_graphic({
+		target: '#allupload',
+		width: window.innerWidth,
+		height: window.innerHeight / 4,
+		left: 80,
+		right: 40,
+		data: data,
+		interpolate: d3.curveLinear,
+		linked: true,
+		linked_format: '%Y-%m-%d-%H-%M',
+		x_accessor: 'datetime',
+		y_accessor: 'upload',
+		y_extended_ticks: true,
+		y_label: 'download speed [Mbps]',
+		x_mouseover: '%Y/%m/%d %H:%M  ',
+		color: 'darkred',
+	});
+
+	MG.data_graphic({
+		target: '#daydownload',
+		width: window.innerWidth,
+		height: window.innerHeight / 4,
+		left: 80,
+		right: 40,
+		chart_type: 'point',
+		data: data.map(x => ({time: new Date(0, 0, 0, x.datetime.getHours(), x.datetime.getMinutes(), x.datetime.getSeconds()), speed: x.download})),
+		linked: true,
+		linked_format: 'day_%H-%M',
+		x_accessor: 'time',
+		y_accessor: 'speed',
+		y_extended_ticks: true,
+		y_label: 'download speed [Mbps]',
+		x_mouseover: '%H:%M  ',
+		show_secondary_x_label: false,
+		color_accessor: 'speed',
+		color_range: ['darkblue', 'darkblue'],
+	});
+	MG.data_graphic({
+		target: '#dayupload',
+		width: window.innerWidth,
+		height: window.innerHeight / 4,
+		left: 80,
+		right: 40,
+		chart_type: 'point',
+		data: data.map(x => ({time: new Date(0, 0, 0, x.datetime.getHours(), x.datetime.getMinutes(), x.datetime.getSeconds()), speed: x.upload})),
+		linked: true,
+		linked_format: 'day_%H-%M',
+		x_accessor: 'time',
+		y_accessor: 'speed',
+		y_extended_ticks: true,
+		y_label: 'upload speed [Mbps]',
+		x_mouseover: '%H:%M  ',
+		show_secondary_x_label: false,
+		color_accessor: 'speed',
+		color_range: ['darkred', 'darkred'],
+	});
+}
+
+
+axios.get('/speedlog')
+	.then(resp => {
+		data = resp.data.map(x => {
+			x['datetime'] = new Date((Date.parse(x.started) + Date.parse(x.ended)) / 2);
+			return x;
+		});
+		rendering();
+	})
+	.catch(err => {
+		alert('something wrong');
+		console.error(err);
+	});
+
+window.addEventListener('resize', rendering);
+	</script>
+</body>

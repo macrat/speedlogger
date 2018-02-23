@@ -1,0 +1,28 @@
+{
+  "name": "speedlogger",
+  "version": "0.0.0",
+  "description": "",
+  "main": "server.js",
+  "dependencies": {
+    "express": "^4.16.2",
+    "node-cron": "^1.2.1",
+    "speedtest-net": "^1.4.2",
+    "sqlite3": "^3.1.13"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "start": "node server.js",
+    "speedtest": "node do-speedtest.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/macrat/speedlogger.git"
+  },
+  "author": "MacRat <m@crat.jp> (https://blanktar.jp)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/macrat/speedlogger/issues"
+  },
+  "homepage": "https://github.com/macrat/speedlogger#readme"
+}
