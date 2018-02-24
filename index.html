@@ -19,8 +19,8 @@ body {
 <body>
 	<div id=alldownload></div>
 	<div id=allupload></div>
-	<div id=daydownload></div>
-	<div id=dayupload></div>
+	<div id=allping></div>
+	<div id=daily></div>
 
 	<script>
 let data = [];
@@ -61,46 +61,50 @@ function rendering() {
 		x_mouseover: '%Y/%m/%d %H:%M  ',
 		color: 'darkred',
 	});
+	MG.data_graphic({
+		target: '#allping',
+		width: window.innerWidth,
+		height: window.innerHeight / 4,
+		left: 80,
+		right: 40,
+		data: data,
+		interpolate: d3.curveLinear,
+		linked: true,
+		linked_format: '%Y-%m-%d-%H-%M',
+		x_accessor: 'datetime',
+		y_accessor: 'ping',
+		y_extended_ticks: true,
+		y_label: 'PING [msecs]',
+		x_mouseover: '%Y/%m/%d %H:%M  ',
+		color: 'gray',
+	});
+
+	let scatterData = data.map(x => ({time: new Date(0, 0, 0, x.datetime.getHours(), x.datetime.getMinutes(), x.datetime.getSeconds()), upload: x.upload, download: x.download}));
+	scatterData = scatterData
+		.map(x => ({time: x.time, value: x.upload, label: 'upload'}))
+		.concat(scatterData.map(x => ({time: x.time, value: x.download, label: 'download'})))
 
 	MG.data_graphic({
-		target: '#daydownload',
+		target: '#daily',
 		width: window.innerWidth,
 		height: window.innerHeight / 4,
 		left: 80,
 		right: 40,
 		chart_type: 'point',
-		data: data.map(x => ({time: new Date(0, 0, 0, x.datetime.getHours(), x.datetime.getMinutes(), x.datetime.getSeconds()), download: x.download, upload: x.upload})),
+		data: scatterData,
 		linked: true,
 		linked_format: 'day_%H-%M',
 		x_accessor: 'time',
-		y_accessor: 'download',
+		y_accessor: 'value',
 		y_extended_ticks: true,
-		y_label: 'DOWNLOAD SPEED [Mbps]',
+		y_label: 'SPEED [Mbps]',
 		x_mouseover: '%H:%M  ',
 		x_sort: true,
 		show_secondary_x_label: false,
-		color_accessor: 'download',
-		color_range: ['darkblue', 'darkblue'],
-	});
-	MG.data_graphic({
-		target: '#dayupload',
-		width: window.innerWidth,
-		height: window.innerHeight / 4,
-		left: 80,
-		right: 40,
-		chart_type: 'point',
-		data: data.map(x => ({time: new Date(0, 0, 0, x.datetime.getHours(), x.datetime.getMinutes(), x.datetime.getSeconds()), download: x.download, upload: x.upload})),
-		linked: true,
-		linked_format: 'day_%H-%M',
-		x_accessor: 'time',
-		y_accessor: 'upload',
-		y_extended_ticks: true,
-		y_label: 'UPLOAD SPEED [Mbps]',
-		x_mouseover: '%H:%M  ',
-		x_sort: true,
-		show_secondary_x_label: false,
-		color_accessor: 'upload',
-		color_range: ['darkred', 'darkred'],
+		color_accessor: 'label',
+		color_type: 'category',
+		color_domain: ['upload', 'download'],
+		color_range: ['darkred', 'darkblue'],
 	});
 }
 
