@@ -9,6 +9,10 @@
 body {
 	margin: 0;
 }
+
+.mg-y-axis .label {
+	text-transform: none;
+}
 	</style>
 </head>
 
@@ -36,7 +40,7 @@ function rendering() {
 		x_accessor: 'datetime',
 		y_accessor: 'download',
 		y_extended_ticks: true,
-		y_label: 'download speed [Mbps]',
+		y_label: 'DOWNLOAD SPEED [Mbps]',
 		x_mouseover: '%Y/%m/%d %H:%M  ',
 		color: 'darkblue',
 	});
@@ -53,7 +57,7 @@ function rendering() {
 		x_accessor: 'datetime',
 		y_accessor: 'upload',
 		y_extended_ticks: true,
-		y_label: 'download speed [Mbps]',
+		y_label: 'DOWNLOAD SPEED [Mbps]',
 		x_mouseover: '%Y/%m/%d %H:%M  ',
 		color: 'darkred',
 	});
@@ -71,8 +75,9 @@ function rendering() {
 		x_accessor: 'time',
 		y_accessor: 'download',
 		y_extended_ticks: true,
-		y_label: 'download speed [Mbps]',
+		y_label: 'DOWNLOAD SPEED [Mbps]',
 		x_mouseover: '%H:%M  ',
+		x_sort: true,
 		show_secondary_x_label: false,
 		color_accessor: 'download',
 		color_range: ['darkblue', 'darkblue'],
@@ -90,8 +95,9 @@ function rendering() {
 		x_accessor: 'time',
 		y_accessor: 'upload',
 		y_extended_ticks: true,
-		y_label: 'upload speed [Mbps]',
+		y_label: 'UPLOAD SPEED [Mbps]',
 		x_mouseover: '%H:%M  ',
+		x_sort: true,
 		show_secondary_x_label: false,
 		color_accessor: 'upload',
 		color_range: ['darkred', 'darkred'],
